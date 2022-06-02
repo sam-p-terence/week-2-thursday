@@ -9,9 +9,9 @@ const multiply = (num1, num2) => num1 * num2
 const divide = (num1, num2) => num1 / num2
 
 const calculator = (num1, num2, callback) => {
-    // we'll check to see if it's true that num1 and num2 can be coerced into a number
-    //if they are able to be a number, we'll do it, and call the callback to do our math
-    //if they aren't able to do the numbers, we warn them that they need to be numbers
+// we'll check to see if it's true that num1 and num2 can be coerced into number
+// if they are able to be numbers, we'll do it, and call the callback to do our math
+// if they aren't able to be numbers, we warn them that they need to be numbers
     if (+num1 && +num2) {
         num1 = +num1
         num2 = +num2
@@ -20,14 +20,16 @@ const calculator = (num1, num2, callback) => {
         console.log('Hey bro/broette! Send me some nums, yo!')
     }
 }
-let result = calculator(5,6,add)
-console.log(result)
-result = calculator(5,6,subtract)
-console.log(result)
-result = calculator(5,6,multiply)
-console.log(result)
-result = calculator(5,6,divide)
-console.log(result)
+
+// let result = calculator(5,6,add)
+// console.log(result)
+// result = calculator(5,6,subtract)
+// console.log(result)
+// result = calculator(5,6,multiply)
+// console.log(result)
+// result = calculator(5,6,divide)
+// console.log(result)
+
 
 ///////////////////////
 ////// PET STORE //////
@@ -88,48 +90,93 @@ const catProducts = [
 ]
 
 // CODE HERE
+
+//callback function #1
 const applyPercentDiscount = (product, discount) => {
     product.displayPrice = product.basePrice * (1 - discount)
 }
+
+//callback functioin #2
 const applyFlatRateDiscount = (product, discount) => {
     product.displayPrice = product.basePrice - discount
 }
 
-const applyDiscounts = (arr, callback, discount) => { 
+//higher order function #1
+const applyDiscounts = (arr, callback, discount) => {
     arr.forEach((product) => {
         callback(product, discount)
     })
 }
 
-// applyDiscounts(dogProducts, applyPercentDiscount, .1)
-// console.log(dogProducts)
+//applyDiscounts(dogProducts, applyPercentDiscount, .1)
+//console.log(dogProducts)
 
-// applyDiscounts(catProducts, applyFlatRateDiscount, 2)
-// console.log(catProducts)
+//applyDiscounts(catProducts, applyFlatRateDiscount, 2)
+//console.log(catProducts)
 
+//higher order function #2
 const applyDiscountsByCategory = (arr, category, callback, discount) => {
-    for (let i = 0; i < arr.length; i++) {
+    for (let i=0; i<arr.length; i++) {
         if (arr[i].category === category) {
             callback(arr[i], discount)
         }
     }
 }
 
-// applyDiscountsByCategory(dogProducts, 1, applyPercentDiscount, .6)
-// console.log(dogProducts)
+//applyDiscountsByCategory(dogProducts, 1, applyPercentDiscount, .6)
+//console.log(dogProducts)
 
-// applyDiscountsByCategory(catProducts, 2, applyFlatRateDiscount, .5)
-// console.log(catProducts)
+//applyDiscountsByCategory(catProducts, 2, applyFlatRateDiscount, .5)
+//console.log(catProducts)
 
 //higher order function #3
-// const apply
+//make a higher order function that takes an inventory threshold as a parameter (a number called "amount")
+//and only applies the discount (another parameter) with the given callback function (another parameter)
+//if the inventory for the product is less than "amount"
+const applyDiscountsByInventory = (arr, amount, callback, discount) => {
+    arr.forEach((product) => {
+        if (product.inventory < amount) {
+            callback(product, discount)
+        }
+    })
+}
+
+// applyDiscountsByInventory(dogProducts, 50, applyPercentDiscount, .05)
+// console.log(dogProducts)
+
+// applyDiscountsByInventory(catProducts, 50, applyFlatRateDiscount, 1.5)
+// console.log(catProducts)
+
 
 ////////////////////////
 ////// SANDWICHES //////
 ////////////////////////
 
 // CODE HERE
+function makeSandwichFunction(bread) {
+    return function(ingredients) {
+        let order = `You ordered a ${bread} bread sandwich with `
+        for (let i=0; i < ingredients.length; i++) {
+            if (i === ingredients.length - 1 && i !== 0) {
+                order += `and ${ingredients[i]}.`
+            } else if (ingredients.length === 1) {
+                order += `${ingredients}.`
+            } else {
+                order += `${ingredients[i]}, `
+            }
+        }
+        return order
+    }
+}
 
+const makeWheatSandwich = makeSandwichFunction('wheat')
+const makeRyeSandwich =  makeSandwichFunction('rye')
+
+let wheatSandwichOrder = makeWheatSandwich(['pickles','tuna','smoked gouda'])
+//console.log(wheatSandwichOrder)
+
+let ryeSandwichOrder = makeRyeSandwich(['lettuce'])
+//console.log(ryeSandwichOrder)
 
 
 ////////////////////////////////////
@@ -179,7 +226,43 @@ const copyArrToSnakeCase = arr => {
 }
   
 // CODE HERE
+let myCamelCaseLotrArray = copyArrToCamelCase(lotr)
+//console.log(myCamelCaseLotrArray)
 
+let mySnakeCaseLotrArray = copyArrToSnakeCase(lotr)
+//console.log(mySnakeCaseLotrArray)
+
+// Let's try to do the previous functions with .map instead
+const newCamelCaseArr = lotr.map((element) => {
+    const splitStr = element.split(' ')
+    let camelCaseStr = ''
+    
+    for (let x = 0; x < splitStr.length; x++) {
+        let word = splitStr[x]
+
+        word = word.toLowerCase()
+
+        if (x !== 0) {
+            word = word.charAt(0).toUpperCase() + word.slice(1)
+        }
+
+        camelCaseStr += word
+    }
+
+    return camelCaseStr
+})
+
+//console.log(newCamelCaseArr)
+
+
+const newSnakeCaseArr = lotr.map((element) => {
+    element = element.toLowerCase()
+    const splitStr = element.split(' ')
+    const snakeCaseStr = splitStr.join('_')
+    return snakeCaseStr
+})
+
+//console.log(newSnakeCaseArr)
 
 ////////////////////////////////////////
 ////// HIGHER ORDER ARRAY METHODS //////
@@ -196,7 +279,7 @@ const copyArrToSnakeCase = arr => {
 const colors = ['red', 'blue', 'yellow', 'green', 'orange']
 
 const newColors = colors.map(() => 'pink')
-console.log(newColors)
+//console.log(newColors)
 
 //const mappedColors // = colors.map()
 
@@ -215,6 +298,8 @@ const formalGreeting = name => {
 }
 
 // Call formalGreeting passing in the formalNames array
+const greetedFormalNames = formalNames.map(formalGreeting)
+//console.log(greetedFormalNames)
 
 
 //// FILTER ////
@@ -227,7 +312,9 @@ const formalGreeting = name => {
 const places = ['Binghampton', 'Albany', 'New York', 'Ithaca', 'Auburn', 'Rochester', 'Buffalo']
 
 const placesThatStartWithA = places.filter((place) => place[0] === 'A')
-console.log(placesThatStartWithA)
+//console.log(placesThatStartWithA)
+
+
 /*
     Create a function called identifier that uses the filter higher order 
     array method to filter over the provided jobs array of objects
@@ -258,21 +345,24 @@ let jobs = [
 //// REDUCE ////
 
 /*
-    Edit the productOfArray function and use 
-    the built in .reduce method to loop over the numbers parameter
-    and return the product of all the numbers in the array
+    Make the productOfArrayCallback function a callback to be handed to
+    the .reduce method. Call .reduce with the numsToReduce array. 
+
+    the return of the .reduce method should be the product of all the numbers
+    in the array
 
     Make sure to use arrow functions combined with the reduce method    
 */
 
-const numsToReduce = [7, 4, 1]
+const numsToReduce = [ 7, 4, 1]
 
-const productOfArrayCallBack = (accumulator, currentValue) => {
+const productOfArrayCallback = (accumulator, currentValue) => {
     return accumulator * currentValue
 }
 
 // CODE HERE
-const product = numsToReduce.reduce(productOfArrayCallBack)
+const product = numsToReduce.reduce(productOfArrayCallback)
+
 console.log(product)
 
 // call productOfArray passing in numsToReduce
